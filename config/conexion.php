@@ -1,5 +1,7 @@
 <?php 
 
+    Class Conectar{
+        public static function conexion(){
     //1. Definimos las credenciales de acceso
     $host = "localhost";
     $db = "gestion_turnos";
@@ -27,5 +29,6 @@
         echo "Error de conexión: " . $e->getMessage();
         exit; // Detiene la ejecución del script en caso de error
     }
+}}
     
 ?>
