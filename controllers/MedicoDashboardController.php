@@ -89,12 +89,34 @@ class MedicoDashboardController
         require_once __DIR__ . '/../views/medico/historial-paciente.php';
     }
 
-    private function resolverMedico(): array
+    public function marcarAtendido(): void
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['ok' => false, 'message' => 'Metodo no permitido.']);
+            return;
         }
 
+        $contexto = $this->resolverMedico();
+        $idMedico = $contexto['id_medico'];
+        $idTurno = (int) ($_POST['id_turno'] ?? 0);
+
+        if ($idMedico <= 0 || $idTurno <= 0) {
+            echo json_encode(['ok' => false, 'message' => 'Turno no encontrado.']);
+            return;
+        }
+
+        $actualizado = $this->turnoModel->marcarAtendido($idTurno, $idMedico);
+
+        echo json_encode([
+            'ok' => $actualizado,
+            'message' => $actualizado ? 'Turno marcado como atendido.' : 'No se pudo actualizar el turno.',
+        ]);
+    }
+
+    private function resolverMedico(): array
+    {
         $idSesion = (int) ($_SESSION['usuario_id'] ?? 0);
         $medico = $idSesion > 0 ? $this->turnoModel->obtenerMedicoPorId($idSesion) : null;
 

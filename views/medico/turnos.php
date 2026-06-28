@@ -67,7 +67,7 @@ function medicoTurnoBadge(string $estado): string
             <section class="data-panel">
                 <div class="table-responsive">
                     <table class="table align-middle">
-                        <thead><tr><th>Fecha y hora</th><th>Paciente</th><th>Contacto</th><th>Motivo</th><th>Estado</th><th>Historial</th></tr></thead>
+                        <thead><tr><th>Fecha y hora</th><th>Paciente</th><th>Contacto</th><th>Motivo</th><th>Estado</th><th>Acciones</th></tr></thead>
                         <tbody>
                             <?php if (empty($turnos)): ?><tr><td colspan="6" class="empty-state">No hay turnos para mostrar.</td></tr><?php endif; ?>
                             <?php foreach ($turnos as $turno): ?>
@@ -76,8 +76,17 @@ function medicoTurnoBadge(string $estado): string
                                     <td><strong><?php echo htmlspecialchars($turno['paciente']); ?></strong><span>DNI <?php echo htmlspecialchars($turno['paciente_dni']); ?></span></td>
                                     <td><?php echo htmlspecialchars($turno['paciente_telefono'] ?: 'Sin telefono'); ?></td>
                                     <td><?php echo htmlspecialchars($turno['motivo'] ?: 'Sin motivo'); ?></td>
-                                    <td><span class="badge <?php echo medicoTurnoBadge($turno['estado']); ?>"><?php echo htmlspecialchars($turno['estado']); ?></span></td>
-                                    <td><a class="btn btn-sm btn-outline-primary" href="index.php?action=medico_historial_paciente&id_paciente=<?php echo (int) $turno['id_paciente']; ?>">Ver</a></td>
+                                    <td><span class="badge js-estado-turno <?php echo medicoTurnoBadge($turno['estado']); ?>"><?php echo htmlspecialchars($turno['estado']); ?></span></td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <a class="btn btn-sm btn-outline-primary" href="index.php?action=medico_historial_paciente&id_paciente=<?php echo (int) $turno['id_paciente']; ?>">Ver</a>
+                                            <?php if ($turno['estado'] !== 'atendido'): ?>
+                                                <button class="btn btn-sm btn-outline-success js-marcar-atendido" type="button" data-turno-id="<?php echo (int) $turno['id']; ?>">Atendido</button>
+                                            <?php else: ?>
+                                                <span class="text-secondary small align-self-center">Atendido</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -86,5 +95,9 @@ function medicoTurnoBadge(string $estado): string
             </section>
         </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/app.js"></script>
+    <script src="public/js/medico.js"></script>
 </body>
 </html>

@@ -21,7 +21,7 @@
         <section class="filter-bar">
             <form action="index.php" method="GET" class="row g-3 align-items-end">
                 <input type="hidden" name="action" value="usuarios">
-                <div class="col-12 col-md-7"><label class="form-label" for="busqueda">Buscar</label><input class="form-control" type="search" id="busqueda" name="busqueda" value="<?php echo htmlspecialchars($busqueda); ?>" placeholder="Nombre, email o rol"></div>
+                <div class="col-12 col-md-7"><label class="form-label" for="busqueda">Buscar</label><input class="form-control" type="search" id="busqueda" name="busqueda" value="<?php echo htmlspecialchars($busqueda); ?>" placeholder="Nombre, email o rol" data-live-search="#tablaUsuarios"></div>
                 <div class="col-12 col-md-3">
                     <label class="form-label" for="rol">Rol</label>
                     <select class="form-select" id="rol" name="rol">
@@ -34,7 +34,7 @@
         </section>
         <section class="data-panel">
             <div class="table-responsive">
-                <table class="table align-middle">
+                <table class="table align-middle" id="tablaUsuarios">
                     <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Alta</th><th class="text-end">Acciones</th></tr></thead>
                     <tbody>
                         <?php if (empty($usuarios)): ?><tr><td colspan="5" class="empty-state">No hay usuarios para mostrar.</td></tr><?php endif; ?>
@@ -44,7 +44,7 @@
                                 <td><?php echo htmlspecialchars($usuario['email']); ?></td>
                                 <td><span class="badge text-bg-light"><?php echo htmlspecialchars($usuario['rol']); ?></span></td>
                                 <td><?php echo htmlspecialchars($usuario['created_at'] ? date('d/m/Y', strtotime($usuario['created_at'])) : '-'); ?></td>
-                                <td><div class="actions"><a class="btn btn-sm btn-outline-secondary" href="index.php?action=usuarios_editar&id=<?php echo (int) $usuario['id']; ?>" title="Editar usuario"><i class="bi bi-pencil"></i></a><form action="index.php?action=usuarios_eliminar" method="POST" onsubmit="return confirm('Eliminar este usuario?');"><input type="hidden" name="id" value="<?php echo (int) $usuario['id']; ?>"><button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar usuario"><i class="bi bi-trash"></i></button></form></div></td>
+                                <td><div class="actions"><a class="btn btn-sm btn-outline-secondary" href="index.php?action=usuarios_editar&id=<?php echo (int) $usuario['id']; ?>" title="Editar usuario"><i class="bi bi-pencil"></i></a><form action="index.php?action=usuarios_eliminar" method="POST" class="js-delete-form"><input type="hidden" name="id" value="<?php echo (int) $usuario['id']; ?>"><button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar usuario"><i class="bi bi-trash"></i></button></form></div></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -53,5 +53,8 @@
         </section>
     </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/app.js"></script>
 </body>
 </html>

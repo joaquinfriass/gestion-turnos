@@ -15,7 +15,7 @@
         <header class="page-header"><div><a class="back-link" href="index.php?action=medicos"><i class="bi bi-arrow-left"></i><span>Medicos</span></a><h1>Editar medico</h1></div></header>
         <?php if (!empty($errores)): ?><div class="alert alert-danger"><?php foreach ($errores as $error): ?><div><?php echo htmlspecialchars($error); ?></div><?php endforeach; ?></div><?php endif; ?>
         <section class="form-panel">
-            <form action="index.php?action=medicos_editar&id=<?php echo (int) $id; ?>" method="POST" class="row g-3">
+            <form action="index.php?action=medicos_editar&id=<?php echo (int) $id; ?>" method="POST" class="row g-3 js-validate">
                 <input type="hidden" name="id" value="<?php echo (int) $id; ?>">
                 <div class="col-12"><label class="form-label" for="nombre">Nombre</label><input class="form-control" id="nombre" name="nombre" value="<?php echo htmlspecialchars($medico['nombre']); ?>" maxlength="100" required></div>
                 <div class="col-12 col-md-6"><label class="form-label" for="email">Email</label><input class="form-control" type="email" id="email" name="email" value="<?php echo htmlspecialchars($medico['email']); ?>" maxlength="150" required></div>
@@ -25,5 +25,8 @@
         </section>
     </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/app.js"></script>
 </body>
 </html>

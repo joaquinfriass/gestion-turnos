@@ -187,6 +187,10 @@ body {
     margin-top: 10px;
 }
 
+.js-horario-feedback {
+    display: none;
+}
+
 .btn {
     font-weight: 700;
 }

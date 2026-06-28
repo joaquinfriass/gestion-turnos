@@ -24,7 +24,7 @@
         <?php endif; ?>
 
         <section class="form-panel">
-            <form action="index.php?action=pacientes_editar&id=<?php echo (int) $id; ?>" method="POST" class="row g-3">
+            <form action="index.php?action=pacientes_editar&id=<?php echo (int) $id; ?>" method="POST" class="row g-3 js-validate">
                 <input type="hidden" name="id" value="<?php echo (int) $id; ?>">
                 <div class="col-12 col-md-6">
                     <label class="form-label" for="dni">DNI</label>
@@ -50,5 +50,8 @@
         </section>
     </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/app.js"></script>
 </body>
 </html>

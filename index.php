@@ -33,6 +33,11 @@ switch ($action) {
         (new TurnoController())->crear();
         break;
 
+    case 'ajax_turno_horario':
+        AuthController::requerirSesion(['admin', 'recepcionista']);
+        (new TurnoController())->verificarHorario();
+        break;
+
     case 'recepcion_pacientes':
         AuthController::requerirSesion(['recepcionista']);
         (new PacienteController())->index();
@@ -71,6 +76,11 @@ switch ($action) {
     case 'medico_historial_paciente':
         AuthController::requerirSesion(['medico']);
         (new MedicoDashboardController())->historialPaciente();
+        break;
+
+    case 'medico_marcar_atendido':
+        AuthController::requerirSesion(['medico']);
+        (new MedicoDashboardController())->marcarAtendido();
         break;
 
     case 'turnos':

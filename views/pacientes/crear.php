@@ -24,7 +24,7 @@
         <?php endif; ?>
 
         <section class="form-panel">
-            <form action="index.php?action=<?php echo htmlspecialchars($formAction ?? 'pacientes_crear'); ?>" method="POST" class="row g-3">
+            <form action="index.php?action=<?php echo htmlspecialchars($formAction ?? 'pacientes_crear'); ?>" method="POST" class="row g-3 js-validate">
                 <div class="col-12 col-md-6">
                     <label class="form-label" for="dni">DNI</label>
                     <input class="form-control" id="dni" name="dni" value="<?php echo htmlspecialchars($paciente['dni']); ?>" maxlength="20" required>
@@ -49,5 +49,8 @@
         </section>
     </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/app.js"></script>
 </body>
 </html>

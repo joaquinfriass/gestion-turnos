@@ -30,7 +30,7 @@
                 <input type="hidden" name="action" value="<?php echo htmlspecialchars($listAction ?? 'pacientes'); ?>">
                 <div class="col-12 col-md-10">
                     <label class="form-label" for="busqueda">Buscar</label>
-                    <input class="form-control" type="search" id="busqueda" name="busqueda" value="<?php echo htmlspecialchars($busqueda); ?>" placeholder="DNI, nombre, apellido o telefono">
+                    <input class="form-control" type="search" id="busqueda" name="busqueda" value="<?php echo htmlspecialchars($busqueda); ?>" placeholder="DNI, nombre, apellido o telefono" data-live-search="#tablaPacientes">
                 </div>
                 <div class="col-12 col-md-2 d-grid">
                     <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i><span>Filtrar</span></button>
@@ -40,7 +40,7 @@
 
         <section class="data-panel">
             <div class="table-responsive">
-                <table class="table align-middle">
+                <table class="table align-middle" id="tablaPacientes">
                     <thead>
                         <tr>
                             <th>DNI</th>
@@ -67,7 +67,7 @@
                                     <td>
                                         <div class="actions">
                                             <a class="btn btn-sm btn-outline-secondary" href="index.php?action=pacientes_editar&id=<?php echo (int) $paciente['id']; ?>" title="Editar paciente"><i class="bi bi-pencil"></i></a>
-                                            <form action="index.php?action=pacientes_eliminar" method="POST" onsubmit="return confirm('Eliminar este paciente?');">
+                                            <form action="index.php?action=pacientes_eliminar" method="POST" class="js-delete-form">
                                                 <input type="hidden" name="id" value="<?php echo (int) $paciente['id']; ?>">
                                                 <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar paciente"><i class="bi bi-trash"></i></button>
                                             </form>
@@ -82,5 +82,8 @@
         </section>
     </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/app.js"></script>
 </body>
 </html>

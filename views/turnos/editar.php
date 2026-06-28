@@ -31,10 +31,10 @@
         <?php endif; ?>
 
         <section class="form-panel">
-            <form action="index.php?action=turnos_editar&id=<?php echo (int) $id; ?>" method="POST" class="row g-3">
+            <form action="index.php?action=turnos_editar&id=<?php echo (int) $id; ?>" method="POST" class="row g-3 js-validate js-turno-form">
                 <input type="hidden" name="id" value="<?php echo (int) $id; ?>">
 
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6 js-horario-anchor">
                     <label class="form-label" for="id_paciente">Paciente</label>
                     <select class="form-select" id="id_paciente" name="id_paciente" required>
                         <option value="">Seleccionar paciente</option>
@@ -97,5 +97,9 @@
         </section>
     </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/app.js"></script>
+    <script src="public/js/turnos.js"></script>
 </body>
 </html>

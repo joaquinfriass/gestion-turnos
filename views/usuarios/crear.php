@@ -15,7 +15,7 @@
         <header class="page-header"><div><a class="back-link" href="index.php?action=usuarios"><i class="bi bi-arrow-left"></i><span>Usuarios</span></a><h1>Nuevo usuario</h1></div></header>
         <?php if (!empty($errores)): ?><div class="alert alert-danger"><?php foreach ($errores as $error): ?><div><?php echo htmlspecialchars($error); ?></div><?php endforeach; ?></div><?php endif; ?>
         <section class="form-panel">
-            <form action="index.php?action=usuarios_crear" method="POST" class="row g-3">
+            <form action="index.php?action=usuarios_crear" method="POST" class="row g-3 js-validate">
                 <div class="col-12"><label class="form-label" for="nombre">Nombre</label><input class="form-control" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" maxlength="100" required></div>
                 <div class="col-12 col-md-6"><label class="form-label" for="email">Email</label><input class="form-control" type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" maxlength="150" required></div>
                 <div class="col-12 col-md-6"><label class="form-label" for="rol">Rol</label><select class="form-select" id="rol" name="rol" required><?php foreach ($roles as $rolItem): ?><option value="<?php echo $rolItem; ?>" <?php echo ($usuario['rol'] === $rolItem) ? 'selected' : ''; ?>><?php echo ucfirst($rolItem); ?></option><?php endforeach; ?></select></div>
@@ -25,5 +25,8 @@
         </section>
     </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/app.js"></script>
 </body>
 </html>

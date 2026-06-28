@@ -30,7 +30,7 @@
                 <input type="hidden" name="action" value="<?php echo htmlspecialchars($listAction ?? 'medicos'); ?>">
                 <div class="col-12 col-md-10">
                     <label class="form-label" for="busqueda">Buscar</label>
-                    <input class="form-control" type="search" id="busqueda" name="busqueda" value="<?php echo htmlspecialchars($busqueda); ?>" placeholder="Nombre o email">
+                    <input class="form-control" type="search" id="busqueda" name="busqueda" value="<?php echo htmlspecialchars($busqueda); ?>" placeholder="Nombre o email" data-live-search="#tablaMedicos">
                 </div>
                 <div class="col-12 col-md-2 d-grid">
                     <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i><span>Filtrar</span></button>
@@ -40,7 +40,7 @@
 
         <section class="data-panel">
             <div class="table-responsive">
-                <table class="table align-middle">
+                <table class="table align-middle" id="tablaMedicos">
                     <thead>
                         <tr>
                             <th>Nombre</th>
@@ -62,7 +62,7 @@
                                     <td>
                                         <div class="actions">
                                             <a class="btn btn-sm btn-outline-secondary" href="index.php?action=medicos_editar&id=<?php echo (int) $medico['id']; ?>" title="Editar medico"><i class="bi bi-pencil"></i></a>
-                                            <form action="index.php?action=medicos_eliminar" method="POST" onsubmit="return confirm('Eliminar este medico?');">
+                                            <form action="index.php?action=medicos_eliminar" method="POST" class="js-delete-form">
                                                 <input type="hidden" name="id" value="<?php echo (int) $medico['id']; ?>">
                                                 <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar medico"><i class="bi bi-trash"></i></button>
                                             </form>
@@ -77,5 +77,8 @@
         </section>
     </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/app.js"></script>
 </body>
 </html>

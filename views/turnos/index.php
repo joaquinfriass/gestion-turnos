@@ -58,6 +58,7 @@ function estadoBadgeTurno(string $estado): string
                         type="search"
                         id="busqueda"
                         name="busqueda"
+                        data-live-search="#tablaTurnos"
                         value="<?php echo htmlspecialchars($filtros['busqueda'] ?? ''); ?>"
                         placeholder="Paciente, DNI, medico o motivo"
                     >
@@ -97,7 +98,7 @@ function estadoBadgeTurno(string $estado): string
 
         <section class="data-panel">
             <div class="table-responsive">
-                <table class="table align-middle">
+                <table class="table align-middle" id="tablaTurnos">
                     <thead>
                         <tr>
                             <th>Fecha y hora</th>
@@ -137,7 +138,7 @@ function estadoBadgeTurno(string $estado): string
                                         <a class="btn btn-sm btn-outline-secondary" href="index.php?action=turnos_editar&id=<?php echo (int) $turno['id']; ?>" title="Editar turno">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <form action="index.php?action=turnos_eliminar" method="POST" onsubmit="return confirm('Eliminar este turno?');">
+                                        <form action="index.php?action=turnos_eliminar" method="POST" class="js-delete-form">
                                             <input type="hidden" name="id" value="<?php echo (int) $turno['id']; ?>">
                                             <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar turno">
                                                 <i class="bi bi-trash"></i>
@@ -153,5 +154,8 @@ function estadoBadgeTurno(string $estado): string
         </section>
     </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/app.js"></script>
 </body>
 </html>

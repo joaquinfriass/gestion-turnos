@@ -143,6 +143,22 @@ class Turno
         return (int) $stmt->fetchColumn() > 0;
     }
 
+    public function marcarAtendido(int $idTurno, int $idMedico): bool
+    {
+        $stmt = $this->db->prepare("
+            UPDATE turnos
+            SET estado = 'atendido'
+            WHERE id = :id AND id_medico = :id_medico
+        ");
+
+        $stmt->execute([
+            ':id' => $idTurno,
+            ':id_medico' => $idMedico,
+        ]);
+
+        return $stmt->rowCount() > 0;
+    }
+
     public function listarPacientes(): array
     {
         $stmt = $this->db->query("

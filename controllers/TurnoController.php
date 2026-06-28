@@ -132,6 +132,35 @@ class TurnoController
         }
     }
 
+    public function verificarHorario(): void
+    {
+        header('Content-Type: application/json');
+
+        $idMedico = (int) ($_GET['id_medico'] ?? 0);
+        $fechaHora = trim($_GET['fecha_hora'] ?? '');
+        $idExcluir = isset($_GET['id_excluir']) ? (int) $_GET['id_excluir'] : null;
+
+        if ($fechaHora !== '') {
+            $fechaHora = str_replace('T', ' ', $fechaHora);
+            if (strlen($fechaHora) === 16) {
+                $fechaHora .= ':00';
+            }
+        }
+
+        if ($idMedico <= 0 || $fechaHora === '') {
+            echo json_encode(['ok' => false, 'ocupado' => false, 'message' => 'Datos incompletos.']);
+            return;
+        }
+
+        $ocupado = $this->turnoModel->horarioOcupado($idMedico, $fechaHora, $idExcluir ?: null);
+
+        echo json_encode([
+            'ok' => true,
+            'ocupado' => $ocupado,
+            'message' => $ocupado ? 'El medico ya tiene un turno en ese horario.' : 'Horario disponible.',
+        ]);
+    }
+
     private function normalizarDatos(array $datos): array
     {
         $fechaHora = trim($datos['fecha_hora'] ?? '');
