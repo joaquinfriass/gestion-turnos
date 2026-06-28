@@ -1,34 +1,36 @@
-<?php 
+<?php
 
-    Class Conectar{
-        public static function conexion(){
-    //1. Definimos las credenciales de acceso
-    $host = "localhost";
-    $db = "gestion_turnos";
-    $user = "root";
-    $pass = "root";
-    $charset = "utf8mb4";
+class Conectar
+{
+    private static ?PDO $conexion = null;
 
-    //2. Construir el DSN (Data Source Name)
-    $dsn = "mysql:host=$host;port=3308;dbname=$db;charset=$charset";
+    public static function conexion(): PDO
+    {
+        if (self::$conexion instanceof PDO) {
+            return self::$conexion;
+        }
 
-    //3. Configurar opciones de PDO
-    $options = [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Acticva el reporte de errores graves
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Devuelve los datos como arrays asociativos
-        PDO::ATTR_EMULATE_PREPARES => false, // Desactiva la emulación para usar consultas preparadas reales
-    ];
+        $host = 'localhost';
+        $port = '3308';
+        $db = 'gestion_turnos';
+        $user = 'root';
+        $pass = 'root';
+        $charset = 'utf8mb4';
 
-    //4. Realizar la conexión utilizando el bloque Try-Catch
-    try {
-        //Creamos la instancia del objeto PDO
-        $pdo = new PDO($dsn, $user, $pass, $options);
-        echo "Conexión exitosa a la base de datos.";
-    } catch (PDOException $e) {
-        // Si ocurre un error, se captura la excepción y se muestra el mensaje de error
-        echo "Error de conexión: " . $e->getMessage();
-        exit; // Detiene la ejecución del script en caso de error
+        $dsn = "mysql:host={$host};port={$port};dbname={$db};charset={$charset}";
+
+        $options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ];
+
+        try {
+            self::$conexion = new PDO($dsn, $user, $pass, $options);
+            return self::$conexion;
+        } catch (PDOException $e) {
+            error_log('Error de conexión a la base de datos: ' . $e->getMessage());
+            throw new RuntimeException('No se pudo conectar a la base de datos.');
+        }
     }
-}}
-    
-?>
+}

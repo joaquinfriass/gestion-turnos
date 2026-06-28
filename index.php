@@ -1,16 +1,15 @@
 <?php
-    include 'config/conexion.php';
+// index.php
+require_once 'controllers/AuthController.php';
 
-    try{
-        $sql = "SELECT * FROM usuarios";
-        $stmt = $pdo->query($sql);
-        $usuarios = $stmt->fetchAll();
+$authController = new AuthController();
 
-        foreach($usuarios as $usuario){
-            echo "ID: " . $usuario['id'] . " - Nombre: " . $usuario['nombre'] . "<br>";
-        }
-    } catch (PDOException $e) {
-        echo "Error al ejecutar la consulta: " . $e->getMessage();
-    }
-    
-?>
+// Leer la acción de la URL (ej: index.php?action=login)
+$action = isset($_GET['action']) ? $_GET['action'] : 'view';
+
+if ($action === 'login') {
+    $authController->login();
+} else {
+    // Si no hay acción o es "view", mostramos la pantalla de login por defecto
+    require_once 'views/login.php';
+}
