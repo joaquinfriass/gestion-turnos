@@ -22,7 +22,9 @@ function estadoBadgeTurno(string $estado): string
     <link href="public/css/turnos.css" rel="stylesheet">
 </head>
 <body>
-    <main class="page-shell">
+    <div class="app-shell">
+        <?php require __DIR__ . '/../layouts/sidebar.php'; ?>
+    <main class="main-content page-shell">
         <header class="page-header">
             <div>
                 <a class="back-link" href="index.php?action=dashboard">
@@ -150,5 +152,6 @@ function estadoBadgeTurno(string $estado): string
             </div>
         </section>
     </main>
+    </div>
 </body>
 </html>

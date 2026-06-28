@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacientes - Gestion de Turnos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="public/css/turnos.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-shell">
+        <?php require __DIR__ . '/../layouts/sidebar.php'; ?>
+    <main class="main-content page-shell">
+        <header class="page-header">
+            <div>
+                <a class="back-link" href="index.php?action=<?php echo htmlspecialchars($backAction ?? 'dashboard'); ?>"><i class="bi bi-arrow-left"></i><span>Dashboard</span></a>
+                <h1>Pacientes</h1>
+            </div>
+            <?php if (empty($soloLectura)): ?>
+                <a class="btn btn-primary" href="index.php?action=pacientes_crear"><i class="bi bi-plus-lg"></i><span>Nuevo paciente</span></a>
+            <?php endif; ?>
+        </header>
+
+        <?php if (!empty($mensaje)): ?><div class="alert alert-success"><?php echo htmlspecialchars($mensaje); ?></div><?php endif; ?>
+        <?php if (!empty($error)): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
+
+        <section class="filter-bar">
+            <form action="index.php" method="GET" class="row g-3 align-items-end">
+                <input type="hidden" name="action" value="<?php echo htmlspecialchars($listAction ?? 'pacientes'); ?>">
+                <div class="col-12 col-md-10">
+                    <label class="form-label" for="busqueda">Buscar</label>
+                    <input class="form-control" type="search" id="busqueda" name="busqueda" value="<?php echo htmlspecialchars($busqueda); ?>" placeholder="DNI, nombre, apellido o telefono">
+                </div>
+                <div class="col-12 col-md-2 d-grid">
+                    <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i><span>Filtrar</span></button>
+                </div>
+            </form>
+        </section>
+
+        <section class="data-panel">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>DNI</th>
+                            <th>Paciente</th>
+                            <th>Telefono</th>
+                            <th>Alta</th>
+                            <?php if (empty($soloLectura)): ?>
+                                <th class="text-end">Acciones</th>
+                            <?php endif; ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($pacientes)): ?>
+                            <tr><td colspan="<?php echo empty($soloLectura) ? '5' : '4'; ?>" class="empty-state">No hay pacientes para mostrar.</td></tr>
+                        <?php endif; ?>
+
+                        <?php foreach ($pacientes as $paciente): ?>
+                            <tr>
+                                <td><strong><?php echo htmlspecialchars($paciente['dni']); ?></strong></td>
+                                <td><?php echo htmlspecialchars($paciente['apellido'] . ', ' . $paciente['nombre']); ?></td>
+                                <td><?php echo htmlspecialchars($paciente['telefono'] ?: 'Sin telefono'); ?></td>
+                                <td><?php echo htmlspecialchars($paciente['created_at'] ? date('d/m/Y', strtotime($paciente['created_at'])) : '-'); ?></td>
+                                <?php if (empty($soloLectura)): ?>
+                                    <td>
+                                        <div class="actions">
+                                            <a class="btn btn-sm btn-outline-secondary" href="index.php?action=pacientes_editar&id=<?php echo (int) $paciente['id']; ?>" title="Editar paciente"><i class="bi bi-pencil"></i></a>
+                                            <form action="index.php?action=pacientes_eliminar" method="POST" onsubmit="return confirm('Eliminar este paciente?');">
+                                                <input type="hidden" name="id" value="<?php echo (int) $paciente['id']; ?>">
+                                                <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar paciente"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    </div>
+</body>
+</html>

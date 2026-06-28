@@ -28,6 +28,10 @@ class TurnoController
 
     public function crear(): void
     {
+        $esRecepcion = ($_GET['action'] ?? '') === 'recepcion_turnos_crear';
+        $formAction = $esRecepcion ? 'recepcion_turnos_crear' : 'turnos_crear';
+        $cancelAction = $esRecepcion ? 'recepcion_dashboard' : 'turnos';
+        $sidebarRole = $esRecepcion ? 'recepcionista' : 'admin';
         $pacientes = $this->turnoModel->listarPacientes();
         $medicos = $this->turnoModel->listarMedicos();
         $turno = [
@@ -50,6 +54,9 @@ class TurnoController
             if (empty($errores)) {
                 try {
                     $this->turnoModel->crear($turno);
+                    if ($esRecepcion) {
+                        $this->redirigir('index.php?action=recepcion_dashboard&mensaje=Turno creado correctamente');
+                    }
                     $this->redirigir('index.php?action=turnos&mensaje=Turno creado correctamente');
                 } catch (PDOException $e) {
                     error_log('Error al crear turno: ' . $e->getMessage());

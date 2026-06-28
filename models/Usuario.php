@@ -1,27 +1,113 @@
-<?php 
+<?php
 
-// models/Usuario.php
-    require_once __DIR__ . '/../config/conexion.php';
+require_once __DIR__ . '/../config/conexion.php';
 
-    class Usuario{
-        private $db;
+class Usuario
+{
+    private PDO $db;
 
-        public function __construct(){
-            //Importamos la clase Conectar y establecemos la conexión a la base de datos
-            $this->db = Conexion::conexion();
-        }
-
-        public function obtenerPorEmail($email){
-            try {
-                $sql = "SELECT * FROM usuarios WHERE email = :email LIMIT 1";
-                $stmt = $this->db->prepare($sql);
-                $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-                $stmt->execute();
-                return $stmt->fetch();
-            } catch (PDOException $e) {
-                echo "Error al ejecutar la consulta: " . $e->getMessage();
-                return false;
-            }
-        }
+    public function __construct()
+    {
+        $this->db = conexion::conexion();
     }
-?>
+
+    public function obtenerPorEmail(string $email): array|false
+    {
+        $stmt = $this->db->prepare('SELECT * FROM usuarios WHERE email = :email LIMIT 1');
+        $stmt->execute([':email' => $email]);
+
+        return $stmt->fetch();
+    }
+
+    public function listar(string $busqueda = '', ?string $rol = null): array
+    {
+        $sql = 'SELECT id, nombre, email, rol, created_at FROM usuarios WHERE 1 = 1';
+        $params = [];
+
+        if ($rol !== null && $rol !== '') {
+            $sql .= ' AND rol = :rol';
+            $params[':rol'] = $rol;
+        }
+
+        if ($busqueda !== '') {
+            $sql .= ' AND (nombre LIKE :busqueda OR email LIKE :busqueda OR rol LIKE :busqueda)';
+            $params[':busqueda'] = '%' . $busqueda . '%';
+        }
+
+        $sql .= ' ORDER BY nombre';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
+    public function obtenerPorId(int $id): ?array
+    {
+        $stmt = $this->db->prepare('SELECT id, nombre, email, rol, created_at FROM usuarios WHERE id = :id LIMIT 1');
+        $stmt->execute([':id' => $id]);
+        $usuario = $stmt->fetch();
+
+        return $usuario ?: null;
+    }
+
+    public function crear(array $datos): bool
+    {
+        $stmt = $this->db->prepare('
+            INSERT INTO usuarios (nombre, email, password, rol)
+            VALUES (:nombre, :email, :password, :rol)
+        ');
+
+        return $stmt->execute([
+            ':nombre' => $datos['nombre'],
+            ':email' => $datos['email'],
+            ':password' => password_hash($datos['password'], PASSWORD_DEFAULT),
+            ':rol' => $datos['rol'],
+        ]);
+    }
+
+    public function actualizar(int $id, array $datos): bool
+    {
+        $params = [
+            ':id' => $id,
+            ':nombre' => $datos['nombre'],
+            ':email' => $datos['email'],
+            ':rol' => $datos['rol'],
+        ];
+
+        $passwordSql = '';
+        if (!empty($datos['password'])) {
+            $passwordSql = ', password = :password';
+            $params[':password'] = password_hash($datos['password'], PASSWORD_DEFAULT);
+        }
+
+        $stmt = $this->db->prepare("
+            UPDATE usuarios
+            SET nombre = :nombre, email = :email, rol = :rol {$passwordSql}
+            WHERE id = :id
+        ");
+
+        return $stmt->execute($params);
+    }
+
+    public function eliminar(int $id): bool
+    {
+        $stmt = $this->db->prepare('DELETE FROM usuarios WHERE id = :id');
+        return $stmt->execute([':id' => $id]);
+    }
+
+    public function emailExiste(string $email, ?int $idExcluir = null): bool
+    {
+        $sql = 'SELECT COUNT(*) FROM usuarios WHERE email = :email';
+        $params = [':email' => $email];
+
+        if ($idExcluir !== null) {
+            $sql .= ' AND id <> :id';
+            $params[':id'] = $idExcluir;
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+}

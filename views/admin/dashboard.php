@@ -75,35 +75,7 @@ function badgeEstado(string $estado): string
 </head>
 <body>
     <div class="app-shell">
-        <aside class="sidebar">
-            <div class="brand">
-                <span class="brand-mark"><i class="bi bi-calendar2-pulse"></i></span>
-                <span>Gestion Turnos</span>
-            </div>
-
-            <nav class="nav flex-column gap-1">
-                <a class="nav-link active" href="index.php?action=dashboard">
-                    <i class="bi bi-speedometer2"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a class="nav-link" href="index.php?action=turnos">
-                    <i class="bi bi-calendar-check"></i>
-                    <span>Turnos</span>
-                </a>
-                <a class="nav-link" href="#">
-                    <i class="bi bi-people"></i>
-                    <span>Pacientes</span>
-                </a>
-                <a class="nav-link" href="#">
-                    <i class="bi bi-person-badge"></i>
-                    <span>Medicos</span>
-                </a>
-                <a class="nav-link" href="#">
-                    <i class="bi bi-person-gear"></i>
-                    <span>Usuarios</span>
-                </a>
-            </nav>
-        </aside>
+        <?php require __DIR__ . '/../layouts/sidebar.php'; ?>
 
         <main class="main-content">
             <header class="topbar">

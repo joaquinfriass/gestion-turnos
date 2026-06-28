@@ -9,7 +9,9 @@
     <link href="public/css/turnos.css" rel="stylesheet">
 </head>
 <body>
-    <main class="page-shell narrow">
+    <div class="app-shell">
+        <?php require __DIR__ . '/../layouts/sidebar.php'; ?>
+    <main class="main-content page-shell narrow">
         <header class="page-header">
             <div>
                 <a class="back-link" href="index.php?action=turnos">
@@ -94,5 +96,6 @@
             </form>
         </section>
     </main>
+    </div>
 </body>
 </html>

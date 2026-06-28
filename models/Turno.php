@@ -165,4 +165,148 @@ class Turno
 
         return $stmt->fetchAll();
     }
+
+    public function obtenerPrimerMedico(): ?array
+    {
+        $stmt = $this->db->query("
+            SELECT id, nombre, email
+            FROM usuarios
+            WHERE rol = 'medico'
+            ORDER BY id
+            LIMIT 1
+        ");
+        $medico = $stmt->fetch();
+
+        return $medico ?: null;
+    }
+
+    public function obtenerMedicoPorId(int $idMedico): ?array
+    {
+        $stmt = $this->db->prepare("
+            SELECT id, nombre, email
+            FROM usuarios
+            WHERE id = :id AND rol = 'medico'
+            LIMIT 1
+        ");
+        $stmt->execute([':id' => $idMedico]);
+        $medico = $stmt->fetch();
+
+        return $medico ?: null;
+    }
+
+    public function listarPorMedico(int $idMedico, array $filtros = []): array
+    {
+        $sql = "
+            SELECT
+                t.id,
+                t.id_paciente,
+                t.fecha_hora,
+                t.motivo,
+                t.estado,
+                CONCAT(p.nombre, ' ', p.apellido) AS paciente,
+                p.dni AS paciente_dni,
+                p.telefono AS paciente_telefono
+            FROM turnos t
+            INNER JOIN pacientes p ON p.id = t.id_paciente
+            WHERE t.id_medico = :id_medico
+        ";
+        $params = [':id_medico' => $idMedico];
+
+        if (!empty($filtros['hoy'])) {
+            $sql .= ' AND DATE(t.fecha_hora) = CURDATE()';
+        }
+
+        if (!empty($filtros['desde'])) {
+            $sql .= ' AND DATE(t.fecha_hora) >= :desde';
+            $params[':desde'] = $filtros['desde'];
+        }
+
+        if (!empty($filtros['hasta'])) {
+            $sql .= ' AND DATE(t.fecha_hora) <= :hasta';
+            $params[':hasta'] = $filtros['hasta'];
+        }
+
+        if (!empty($filtros['estado'])) {
+            $sql .= ' AND t.estado = :estado';
+            $params[':estado'] = $filtros['estado'];
+        }
+
+        if (!empty($filtros['busqueda'])) {
+            $sql .= " AND (
+                p.nombre LIKE :busqueda
+                OR p.apellido LIKE :busqueda
+                OR p.dni LIKE :busqueda
+                OR t.motivo LIKE :busqueda
+            )";
+            $params[':busqueda'] = '%' . $filtros['busqueda'] . '%';
+        }
+
+        $sql .= !empty($filtros['hoy']) ? ' ORDER BY t.fecha_hora ASC' : ' ORDER BY t.fecha_hora DESC';
+
+        if (!empty($filtros['limite'])) {
+            $sql .= ' LIMIT ' . (int) $filtros['limite'];
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
+    public function resumenPacientesPorMedico(int $idMedico, string $busqueda = ''): array
+    {
+        $sql = "
+            SELECT
+                p.id,
+                p.dni,
+                p.nombre,
+                p.apellido,
+                p.telefono,
+                COUNT(t.id) AS total_turnos,
+                MAX(t.fecha_hora) AS ultimo_turno
+            FROM pacientes p
+            INNER JOIN turnos t ON t.id_paciente = p.id
+            WHERE t.id_medico = :id_medico
+        ";
+        $params = [':id_medico' => $idMedico];
+
+        if ($busqueda !== '') {
+            $sql .= ' AND (p.nombre LIKE :busqueda OR p.apellido LIKE :busqueda OR p.dni LIKE :busqueda)';
+            $params[':busqueda'] = '%' . $busqueda . '%';
+        }
+
+        $sql .= '
+            GROUP BY p.id, p.dni, p.nombre, p.apellido, p.telefono
+            ORDER BY ultimo_turno DESC
+        ';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
+    public function historialPacientePorMedico(int $idMedico, int $idPaciente): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT
+                t.id,
+                t.fecha_hora,
+                t.motivo,
+                t.estado,
+                CONCAT(p.nombre, ' ', p.apellido) AS paciente,
+                p.dni AS paciente_dni,
+                p.telefono AS paciente_telefono
+            FROM turnos t
+            INNER JOIN pacientes p ON p.id = t.id_paciente
+            WHERE t.id_medico = :id_medico AND t.id_paciente = :id_paciente
+            ORDER BY t.fecha_hora DESC
+        ");
+        $stmt->execute([
+            ':id_medico' => $idMedico,
+            ':id_paciente' => $idPaciente,
+        ]);
+
+        return $stmt->fetchAll();
+    }
 }

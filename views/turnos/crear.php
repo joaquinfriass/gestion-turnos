@@ -9,10 +9,12 @@
     <link href="public/css/turnos.css" rel="stylesheet">
 </head>
 <body>
-    <main class="page-shell narrow">
+    <div class="app-shell">
+        <?php require __DIR__ . '/../layouts/sidebar.php'; ?>
+    <main class="main-content page-shell narrow">
         <header class="page-header">
             <div>
-                <a class="back-link" href="index.php?action=turnos">
+                <a class="back-link" href="index.php?action=<?php echo htmlspecialchars($cancelAction ?? 'turnos'); ?>">
                     <i class="bi bi-arrow-left"></i>
                     <span>Turnos</span>
                 </a>
@@ -35,7 +37,7 @@
         <?php endif; ?>
 
         <section class="form-panel">
-            <form action="index.php?action=turnos_crear" method="POST" class="row g-3">
+            <form action="index.php?action=<?php echo htmlspecialchars($formAction ?? 'turnos_crear'); ?>" method="POST" class="row g-3">
                 <div class="col-12 col-md-6">
                     <label class="form-label" for="id_paciente">Paciente</label>
                     <select class="form-select" id="id_paciente" name="id_paciente" required>
@@ -89,7 +91,7 @@
                 </div>
 
                 <div class="form-actions">
-                    <a class="btn btn-outline-secondary" href="index.php?action=turnos">Cancelar</a>
+                    <a class="btn btn-outline-secondary" href="index.php?action=<?php echo htmlspecialchars($cancelAction ?? 'turnos'); ?>">Cancelar</a>
                     <button class="btn btn-primary" type="submit">
                         <i class="bi bi-check-lg"></i>
                         <span>Guardar turno</span>
@@ -98,5 +100,6 @@
             </form>
         </section>
     </main>
+    </div>
 </body>
 </html>
