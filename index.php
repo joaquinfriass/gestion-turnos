@@ -1,15 +1,31 @@
 <?php
-// index.php
-require_once 'controllers/AuthController.php';
 
-$authController = new AuthController();
+require_once __DIR__ . '/controllers/TurnoController.php';
 
-// Leer la acción de la URL (ej: index.php?action=login)
-$action = isset($_GET['action']) ? $_GET['action'] : 'view';
+$action = $_GET['action'] ?? 'dashboard';
 
-if ($action === 'login') {
-    $authController->login();
-} else {
-    // Si no hay acción o es "view", mostramos la pantalla de login por defecto
-    require_once 'views/login.php';
+switch ($action) {
+    case 'dashboard':
+        require_once __DIR__ . '/views/admin/dashboard.php';
+        break;
+
+    case 'turnos':
+        (new TurnoController())->index();
+        break;
+
+    case 'turnos_crear':
+        (new TurnoController())->crear();
+        break;
+
+    case 'turnos_editar':
+        (new TurnoController())->editar();
+        break;
+
+    case 'turnos_eliminar':
+        (new TurnoController())->eliminar();
+        break;
+
+    default:
+        require_once __DIR__ . '/views/admin/dashboard.php';
+        break;
 }

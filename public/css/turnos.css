@@ -1,0 +1,168 @@
+:root {
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --text: #172033;
+    --muted: #6b7280;
+    --line: #d9e0ea;
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.page-shell {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 28px 0;
+}
+
+.page-shell.narrow {
+    width: min(840px, calc(100% - 32px));
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.page-header h1 {
+    margin: 6px 0 0;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: var(--primary);
+}
+
+.filter-bar,
+.data-panel,
+.form-panel {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+.filter-bar {
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+.data-panel {
+    overflow: hidden;
+}
+
+.form-panel {
+    padding: 22px;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.table th,
+.table td {
+    padding: 14px 18px;
+}
+
+.table td strong,
+.table td span {
+    display: block;
+}
+
+.table td span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.empty-state {
+    padding: 34px 18px !important;
+    color: var(--muted);
+    text-align: center;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.actions form {
+    margin: 0;
+}
+
+.actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 32px;
+    padding: 0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn {
+    font-weight: 700;
+}
+
+.btn i {
+    margin-right: 4px;
+}
+
+.actions .btn i {
+    margin-right: 0;
+}
+
+@media (max-width: 760px) {
+    .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .page-header .btn {
+        width: 100%;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+}

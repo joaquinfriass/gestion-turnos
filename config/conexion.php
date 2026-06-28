@@ -1,6 +1,6 @@
 <?php
 
-class Conectar
+class conexion
 {
     private static ?PDO $conexion = null;
 

@@ -1,14 +1,14 @@
 <?php 
 
 // models/Usuario.php
-    require_once 'config/conexion.php';
+    require_once __DIR__ . '/../config/conexion.php';
 
     class Usuario{
         private $db;
 
         public function __construct(){
             //Importamos la clase Conectar y establecemos la conexión a la base de datos
-            $this->db = Conectar::conexion();
+            $this->db = Conexion::conexion();
         }
 
         public function obtenerPorEmail($email){

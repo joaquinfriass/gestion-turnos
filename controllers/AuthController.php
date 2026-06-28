@@ -1,6 +1,8 @@
 <?php
 // controllers/AuthController.php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/../models/Usuario.php';
 
 class AuthController {
@@ -13,7 +15,7 @@ class AuthController {
 
             if (empty($email) || empty($password)) {
                 $error = "Por favor, completa todos los campos.";
-                require_once __DIR__ . '/../views/login.php';
+                require_once __DIR__ . '/../views/auth/login.php';
                 return;
             }
 
@@ -31,28 +33,30 @@ class AuthController {
                 // Redirección según el ROL (Tu requerimiento principal)
                 switch ($usuario['rol']) {
                     case 'admin':
-                        header('Location: views/admin.php');
+                        header('Location: views/admin/dashboard.php');
                         break;
                     case 'recep1aer': // Corregido según tu ENUM previo o 'recepcionista'
                     case 'recepcionista':
-                        header('Location: views/recepcion.php');
+                        header('Location: views/recepcion/dashboard.php');
                         break;
                     case 'medico':
-                        header('Location: views/medico.php');
+                        header('Location: views/medico/dashboard.php');
                         break;
                 }
                 exit;
             } else {
                 $error = "Email o contraseña incorrectos.";
-                require_once __DIR__ . '/../views/login.php';
+                require_once __DIR__ . '/../views/auth/login.php';
             }
         }
     }
 
     public function logout() {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         session_destroy();
-        header('Location: ../index.php');
+        header('Location: index.php');
         exit;
     }
 }
