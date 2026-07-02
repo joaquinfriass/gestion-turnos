@@ -19,7 +19,9 @@ class MedicoController
         $listAction = $esRecepcion ? 'recepcion_medicos' : 'medicos';
         $backAction = $esRecepcion ? 'recepcion_dashboard' : 'dashboard';
         $busqueda = trim($_GET['busqueda'] ?? '');
-        $medicos = $this->medicoModel->listar($busqueda);
+        $especialidad = trim($_GET['especialidad'] ?? '');
+        $matricula = trim($_GET['matricula'] ?? '');
+        $medicos = $this->medicoModel->listarFiltrado($busqueda, $especialidad, $matricula);
         $mensaje = $_GET['mensaje'] ?? null;
         $error = $_GET['error'] ?? null;
 
@@ -28,7 +30,7 @@ class MedicoController
 
     public function crear(): void
     {
-        $medico = ['nombre' => '', 'email' => '', 'password' => ''];
+        $medico = ['nombre' => '', 'email' => '', 'password' => '', 'especialidad' => '', 'matricula' => ''];
         $errores = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -106,12 +108,22 @@ class MedicoController
 
     private function normalizar(array $datos): array
     {
+        $nombre = trim($datos['nombre'] ?? '');
+
         return [
-            'nombre' => trim($datos['nombre'] ?? ''),
+            'nombre' => $this->nombreMedico($nombre),
             'email' => trim($datos['email'] ?? ''),
             'password' => trim($datos['password'] ?? ''),
+            'especialidad' => trim($datos['especialidad'] ?? ''),
+            'matricula' => trim($datos['matricula'] ?? ''),
             'rol' => 'medico',
         ];
+    }
+
+    private function nombreMedico(string $nombre): string
+    {
+        $nombre = trim(preg_replace('/^dra?\.?\s+/i', '', $nombre));
+        return 'Dr. ' . $nombre;
     }
 
     private function validar(array $medico, bool $requierePassword): array
@@ -124,6 +136,14 @@ class MedicoController
 
         if (!filter_var($medico['email'], FILTER_VALIDATE_EMAIL)) {
             $errores[] = 'Ingresa un email valido.';
+        }
+
+        if ($medico['especialidad'] === '') {
+            $errores[] = 'Ingresa la especialidad.';
+        }
+
+        if ($medico['matricula'] === '') {
+            $errores[] = 'Ingresa la matricula.';
         }
 
         if ($requierePassword && $medico['password'] === '') {

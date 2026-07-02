@@ -196,6 +196,8 @@ class TurnoController
 
         if (empty($turno['fecha_hora'])) {
             $errores[] = 'Selecciona fecha y hora.';
+        } elseif (strtotime($turno['fecha_hora']) < time()) {
+            $errores[] = 'No se puede seleccionar una fecha y hora pasada.';
         }
 
         if (!in_array($turno['estado'], $estadosValidos, true)) {

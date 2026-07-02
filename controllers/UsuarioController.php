@@ -16,6 +16,7 @@ class UsuarioController
     {
         $busqueda = trim($_GET['busqueda'] ?? '');
         $rol = $_GET['rol'] ?? '';
+        $roles = $this->roles;
         $usuarios = $this->usuarioModel->listar($busqueda, $rol ?: null);
         $mensaje = $_GET['mensaje'] ?? null;
         $error = $_GET['error'] ?? null;
@@ -25,7 +26,7 @@ class UsuarioController
 
     public function crear(): void
     {
-        $usuario = ['nombre' => '', 'email' => '', 'password' => '', 'rol' => 'recepcionista'];
+        $usuario = ['nombre' => '', 'email' => '', 'password' => '', 'rol' => 'recepcionista', 'especialidad' => '', 'matricula' => ''];
         $errores = [];
         $roles = $this->roles;
 
@@ -105,12 +106,23 @@ class UsuarioController
 
     private function normalizar(array $datos): array
     {
+        $rol = $datos['rol'] ?? '';
+        $nombre = trim($datos['nombre'] ?? '');
+
         return [
-            'nombre' => trim($datos['nombre'] ?? ''),
+            'nombre' => $rol === 'medico' ? $this->nombreMedico($nombre) : $nombre,
             'email' => trim($datos['email'] ?? ''),
             'password' => trim($datos['password'] ?? ''),
-            'rol' => $datos['rol'] ?? '',
+            'rol' => $rol,
+            'especialidad' => trim($datos['especialidad'] ?? ''),
+            'matricula' => trim($datos['matricula'] ?? ''),
         ];
+    }
+
+    private function nombreMedico(string $nombre): string
+    {
+        $nombre = trim(preg_replace('/^dra?\.?\s+/i', '', $nombre));
+        return 'Dr. ' . $nombre;
     }
 
     private function validar(array $usuario, bool $requierePassword): array
@@ -131,6 +143,16 @@ class UsuarioController
 
         if ($requierePassword && $usuario['password'] === '') {
             $errores[] = 'Ingresa una contraseña.';
+        }
+
+        if ($usuario['rol'] === 'medico') {
+            if ($usuario['especialidad'] === '') {
+                $errores[] = 'Ingresa la especialidad del medico.';
+            }
+
+            if ($usuario['matricula'] === '') {
+                $errores[] = 'Ingresa la matricula del medico.';
+            }
         }
 
         return $errores;

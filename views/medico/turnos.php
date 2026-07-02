@@ -38,7 +38,7 @@ function medicoTurnoBadge(string $estado): string
                         <input type="hidden" name="action" value="medico_turnos_historico">
                         <div class="col-12 col-md-3">
                             <label class="form-label" for="busqueda">Buscar</label>
-                            <input class="form-control" type="search" id="busqueda" name="busqueda" value="<?php echo htmlspecialchars($filtros['busqueda'] ?? ''); ?>" placeholder="Paciente, DNI o motivo">
+                            <input class="form-control" type="search" id="busqueda" name="busqueda" value="<?php echo htmlspecialchars($filtros['busqueda'] ?? ''); ?>" placeholder="Paciente, DNI o motivo" data-live-search="#tablaMedicoTurnos">
                         </div>
                         <div class="col-12 col-md-2">
                             <label class="form-label" for="desde">Desde</label>
@@ -66,7 +66,7 @@ function medicoTurnoBadge(string $estado): string
 
             <section class="data-panel">
                 <div class="table-responsive">
-                    <table class="table align-middle">
+                    <table class="table align-middle" id="tablaMedicoTurnos">
                         <thead><tr><th>Fecha y hora</th><th>Paciente</th><th>Contacto</th><th>Motivo</th><th>Estado</th><th>Acciones</th></tr></thead>
                         <tbody>
                             <?php if (empty($turnos)): ?><tr><td colspan="6" class="empty-state">No hay turnos para mostrar.</td></tr><?php endif; ?>
@@ -81,7 +81,7 @@ function medicoTurnoBadge(string $estado): string
                                         <div class="d-flex gap-2">
                                             <a class="btn btn-sm btn-outline-primary" href="index.php?action=medico_historial_paciente&id_paciente=<?php echo (int) $turno['id_paciente']; ?>">Ver</a>
                                             <?php if ($turno['estado'] !== 'atendido'): ?>
-                                                <button class="btn btn-sm btn-outline-success js-marcar-atendido" type="button" data-turno-id="<?php echo (int) $turno['id']; ?>">Atendido</button>
+                                                <button class="btn btn-sm btn-outline-success js-marcar-atendido" type="button" data-turno-id="<?php echo (int) $turno['id']; ?>" data-csrf-token="<?php echo htmlspecialchars(AuthController::csrfToken(), ENT_QUOTES, 'UTF-8'); ?>">Atendido</button>
                                             <?php else: ?>
                                                 <span class="text-secondary small align-self-center">Atendido</span>
                                             <?php endif; ?>

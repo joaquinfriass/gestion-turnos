@@ -44,7 +44,7 @@
                                 <td><?php echo htmlspecialchars($usuario['email']); ?></td>
                                 <td><span class="badge text-bg-light"><?php echo htmlspecialchars($usuario['rol']); ?></span></td>
                                 <td><?php echo htmlspecialchars($usuario['created_at'] ? date('d/m/Y', strtotime($usuario['created_at'])) : '-'); ?></td>
-                                <td><div class="actions"><a class="btn btn-sm btn-outline-secondary" href="index.php?action=usuarios_editar&id=<?php echo (int) $usuario['id']; ?>" title="Editar usuario"><i class="bi bi-pencil"></i></a><form action="index.php?action=usuarios_eliminar" method="POST" class="js-delete-form"><input type="hidden" name="id" value="<?php echo (int) $usuario['id']; ?>"><button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar usuario"><i class="bi bi-trash"></i></button></form></div></td>
+                                <td><div class="actions"><a class="btn btn-sm btn-outline-secondary" href="index.php?action=usuarios_editar&id=<?php echo (int) $usuario['id']; ?>" title="Editar usuario"><i class="bi bi-pencil"></i></a><form action="index.php?action=usuarios_eliminar" method="POST" class="js-delete-form"><?php echo AuthController::csrfInput(); ?><input type="hidden" name="id" value="<?php echo (int) $usuario['id']; ?>"><button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar usuario"><i class="bi bi-trash"></i></button></form></div></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

@@ -52,6 +52,63 @@
         });
     }
 
+    function initPacienteSelectFilter() {
+        $(document).on('input', '.js-filter-select', function () {
+            var input = $(this);
+            var query = input.val().toLowerCase();
+            var select = $(input.data('target'));
+
+            select.find('option').each(function () {
+                var option = $(this);
+                if (!option.val()) {
+                    option.prop('hidden', false);
+                    return;
+                }
+
+                var searchable = option.data('search') || option.text();
+                option.prop('hidden', String(searchable).toLowerCase().indexOf(query) === -1);
+            });
+        });
+    }
+
+    function initMedicoFilters() {
+        function filtrar() {
+            var especialidad = String($('#filtro_especialidad').val() || '').toLowerCase();
+            var matricula = String($('#filtro_matricula').val() || '').toLowerCase();
+            var select = $('#id_medico');
+
+            select.find('option').each(function () {
+                var option = $(this);
+                if (!option.val()) {
+                    option.prop('hidden', false);
+                    return;
+                }
+
+                var matchEspecialidad = !especialidad || String(option.data('especialidad') || '').indexOf(especialidad) !== -1;
+                var matchMatricula = !matricula || String(option.data('matricula') || '').indexOf(matricula) !== -1;
+                var visible = matchEspecialidad && matchMatricula;
+
+                option.prop('hidden', !visible);
+                if (!visible && option.is(':selected')) {
+                    select.val('');
+                }
+            });
+        }
+
+        $(document).on('input', '.js-filter-medicos', filtrar);
+    }
+
+    function initFechaPasadaValidation() {
+        $(document).on('submit', 'form.js-turno-form', function (event) {
+            var fecha = new Date($(this).find('[name="fecha_hora"]').val());
+
+            if (fecha.toString() !== 'Invalid Date' && fecha.getTime() < Date.now()) {
+                event.preventDefault();
+                alert('No se puede seleccionar una fecha y hora pasada.');
+            }
+        });
+    }
+
     $(function () {
         var form = $('form.js-turno-form');
         if (!form.length) {
@@ -63,5 +120,8 @@
         });
 
         verificarHorario(form);
+        initPacienteSelectFilter();
+        initMedicoFilters();
+        initFechaPasadaValidation();
     });
 })(jQuery);

@@ -25,6 +25,7 @@
 
         <section class="form-panel">
             <form action="index.php?action=<?php echo htmlspecialchars($formAction ?? 'pacientes_crear'); ?>" method="POST" class="row g-3 js-validate">
+                <?php echo AuthController::csrfInput(); ?>
                 <div class="col-12 col-md-6">
                     <label class="form-label" for="dni">DNI</label>
                     <input class="form-control" id="dni" name="dni" value="<?php echo htmlspecialchars($paciente['dni']); ?>" maxlength="20" required>

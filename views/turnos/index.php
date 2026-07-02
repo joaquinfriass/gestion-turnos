@@ -139,6 +139,7 @@ function estadoBadgeTurno(string $estado): string
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <form action="index.php?action=turnos_eliminar" method="POST" class="js-delete-form">
+                                            <?php echo AuthController::csrfInput(); ?>
                                             <input type="hidden" name="id" value="<?php echo (int) $turno['id']; ?>">
                                             <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar turno">
                                                 <i class="bi bi-trash"></i>

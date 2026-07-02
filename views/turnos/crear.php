@@ -38,12 +38,18 @@
 
         <section class="form-panel">
             <form action="index.php?action=<?php echo htmlspecialchars($formAction ?? 'turnos_crear'); ?>" method="POST" class="row g-3 js-validate js-turno-form">
+                <?php echo AuthController::csrfInput(); ?>
+                <div class="col-12">
+                    <label class="form-label" for="buscar_paciente">Buscar paciente</label>
+                    <input class="form-control js-filter-select" id="buscar_paciente" type="search" placeholder="DNI, nombre o apellido" data-target="#id_paciente">
+                </div>
+
                 <div class="col-12 col-md-6 js-horario-anchor">
                     <label class="form-label" for="id_paciente">Paciente</label>
                     <select class="form-select" id="id_paciente" name="id_paciente" required>
                         <option value="">Seleccionar paciente</option>
                         <?php foreach ($pacientes as $paciente): ?>
-                            <option value="<?php echo (int) $paciente['id']; ?>" <?php echo ((int) $turno['id_paciente'] === (int) $paciente['id']) ? 'selected' : ''; ?>>
+                            <option value="<?php echo (int) $paciente['id']; ?>" data-search="<?php echo htmlspecialchars(strtolower($paciente['apellido'] . ' ' . $paciente['nombre'] . ' ' . $paciente['dni'])); ?>" <?php echo ((int) $turno['id_paciente'] === (int) $paciente['id']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($paciente['apellido'] . ', ' . $paciente['nombre'] . ' - DNI ' . $paciente['dni']); ?>
                             </option>
                         <?php endforeach; ?>
@@ -55,11 +61,21 @@
                     <select class="form-select" id="id_medico" name="id_medico" required>
                         <option value="">Seleccionar medico</option>
                         <?php foreach ($medicos as $medico): ?>
-                            <option value="<?php echo (int) $medico['id']; ?>" <?php echo ((int) $turno['id_medico'] === (int) $medico['id']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($medico['nombre']); ?>
+                            <option value="<?php echo (int) $medico['id']; ?>" data-especialidad="<?php echo htmlspecialchars(strtolower($medico['especialidad'] ?? '')); ?>" data-matricula="<?php echo htmlspecialchars(strtolower($medico['matricula'] ?? '')); ?>" <?php echo ((int) $turno['id_medico'] === (int) $medico['id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($medico['nombre'] . ' - ' . ($medico['especialidad'] ?: 'Sin especialidad') . ' - ' . ($medico['matricula'] ?: 'Sin matricula')); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label" for="filtro_especialidad">Especialidad</label>
+                    <input class="form-control js-filter-medicos" id="filtro_especialidad" type="search" placeholder="Filtrar especialidad" data-field="especialidad">
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label" for="filtro_matricula">Matricula</label>
+                    <input class="form-control js-filter-medicos" id="filtro_matricula" type="search" placeholder="Filtrar matricula" data-field="matricula">
                 </div>
 
                 <div class="col-12 col-md-6">
@@ -70,6 +86,7 @@
                         id="fecha_hora"
                         name="fecha_hora"
                         value="<?php echo htmlspecialchars($turno['fecha_hora'] ? date('Y-m-d\TH:i', strtotime($turno['fecha_hora'])) : ''); ?>"
+                        min="<?php echo date('Y-m-d\TH:i'); ?>"
                         required
                     >
                 </div>

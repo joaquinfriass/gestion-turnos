@@ -9,6 +9,10 @@ require_once __DIR__ . '/controllers/MedicoDashboardController.php';
 
 $action = $_GET['action'] ?? 'login';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    AuthController::verificarCsrf();
+}
+
 switch ($action) {
     case 'login':
         (new AuthController())->login();
@@ -45,8 +49,8 @@ switch ($action) {
 
     case 'recepcion_pacientes_crear':
         AuthController::requerirSesion(['recepcionista']);
-        header('Location: index.php?action=recepcion_pacientes');
-        exit;
+        (new PacienteController())->crear();
+        break;
 
     case 'recepcion_medicos':
         AuthController::requerirSesion(['recepcionista']);

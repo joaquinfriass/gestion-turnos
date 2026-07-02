@@ -28,9 +28,17 @@
         <section class="filter-bar">
             <form action="index.php" method="GET" class="row g-3 align-items-end">
                 <input type="hidden" name="action" value="<?php echo htmlspecialchars($listAction ?? 'medicos'); ?>">
-                <div class="col-12 col-md-10">
+                <div class="col-12 col-md-4">
                     <label class="form-label" for="busqueda">Buscar</label>
                     <input class="form-control" type="search" id="busqueda" name="busqueda" value="<?php echo htmlspecialchars($busqueda); ?>" placeholder="Nombre o email" data-live-search="#tablaMedicos">
+                </div>
+                <div class="col-12 col-md-3">
+                    <label class="form-label" for="especialidad">Especialidad</label>
+                    <input class="form-control" id="especialidad" name="especialidad" value="<?php echo htmlspecialchars($especialidad ?? ''); ?>" placeholder="Clinica, pediatria...">
+                </div>
+                <div class="col-12 col-md-3">
+                    <label class="form-label" for="matricula">Matricula</label>
+                    <input class="form-control" id="matricula" name="matricula" value="<?php echo htmlspecialchars($matricula ?? ''); ?>" placeholder="MN 12345">
                 </div>
                 <div class="col-12 col-md-2 d-grid">
                     <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i><span>Filtrar</span></button>
@@ -45,6 +53,8 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Email</th>
+                            <th>Especialidad</th>
+                            <th>Matricula</th>
                             <th>Alta</th>
                             <?php if (empty($soloLectura)): ?>
                                 <th class="text-end">Acciones</th>
@@ -52,17 +62,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (empty($medicos)): ?><tr><td colspan="<?php echo empty($soloLectura) ? '4' : '3'; ?>" class="empty-state">No hay medicos para mostrar.</td></tr><?php endif; ?>
+                        <?php if (empty($medicos)): ?><tr><td colspan="<?php echo empty($soloLectura) ? '6' : '5'; ?>" class="empty-state">No hay medicos para mostrar.</td></tr><?php endif; ?>
                         <?php foreach ($medicos as $medico): ?>
                             <tr>
                                 <td><strong><?php echo htmlspecialchars($medico['nombre']); ?></strong></td>
                                 <td><?php echo htmlspecialchars($medico['email']); ?></td>
+                                <td><?php echo htmlspecialchars($medico['especialidad'] ?: 'Sin especialidad'); ?></td>
+                                <td><?php echo htmlspecialchars($medico['matricula'] ?: 'Sin matricula'); ?></td>
                                 <td><?php echo htmlspecialchars($medico['created_at'] ? date('d/m/Y', strtotime($medico['created_at'])) : '-'); ?></td>
                                 <?php if (empty($soloLectura)): ?>
                                     <td>
                                         <div class="actions">
                                             <a class="btn btn-sm btn-outline-secondary" href="index.php?action=medicos_editar&id=<?php echo (int) $medico['id']; ?>" title="Editar medico"><i class="bi bi-pencil"></i></a>
                                             <form action="index.php?action=medicos_eliminar" method="POST" class="js-delete-form">
+                                                <?php echo AuthController::csrfInput(); ?>
                                                 <input type="hidden" name="id" value="<?php echo (int) $medico['id']; ?>">
                                                 <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar medico"><i class="bi bi-trash"></i></button>
                                             </form>

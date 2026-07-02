@@ -9,7 +9,7 @@
 
             button.prop('disabled', true);
 
-            $.post('index.php?action=medico_marcar_atendido', { id_turno: idTurno }, null, 'json')
+            $.post('index.php?action=medico_marcar_atendido', { id_turno: idTurno, csrf_token: button.data('csrf-token') }, null, 'json')
                 .done(function (response) {
                     if (!response.ok) {
                         button.prop('disabled', false);

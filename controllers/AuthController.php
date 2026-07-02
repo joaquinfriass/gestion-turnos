@@ -4,6 +4,8 @@ require_once __DIR__ . '/../models/Usuario.php';
 
 class AuthController
 {
+    private const CSRF_KEY = 'csrf_token';
+
     public function login(): void
     {
         $this->iniciarSesion();
@@ -35,6 +37,7 @@ class AuthController
             }
 
             session_regenerate_id(true);
+            $_SESSION[self::CSRF_KEY] = bin2hex(random_bytes(32));
             $_SESSION['usuario_id'] = (int) $usuario['id'];
             $_SESSION['usuario_nombre'] = $usuario['nombre'];
             $_SESSION['usuario_email'] = $usuario['email'];
@@ -96,6 +99,37 @@ class AuthController
 
         header('Location: ' . ($destinos[$rol] ?? 'index.php?action=login'));
         exit;
+    }
+
+    public static function csrfToken(): string
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            self::configurarSesion();
+            session_start();
+        }
+
+        if (empty($_SESSION[self::CSRF_KEY])) {
+            $_SESSION[self::CSRF_KEY] = bin2hex(random_bytes(32));
+        }
+
+        return $_SESSION[self::CSRF_KEY];
+    }
+
+    public static function csrfInput(): string
+    {
+        return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars(self::csrfToken(), ENT_QUOTES, 'UTF-8') . '">';
+    }
+
+    public static function verificarCsrf(): void
+    {
+        $token = $_POST['csrf_token'] ?? '';
+
+        if (!hash_equals(self::csrfToken(), (string) $token)) {
+            http_response_code(419);
+            header('Content-Type: text/plain; charset=UTF-8');
+            echo 'Token CSRF inválido. Recargá la página e intentá nuevamente.';
+            exit;
+        }
     }
 
     private function redirigirPorRol(string $rol): void

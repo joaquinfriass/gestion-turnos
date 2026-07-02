@@ -56,6 +56,8 @@
                 row.toggle(row.text().toLowerCase().indexOf(query) !== -1);
             });
         });
+
+        $('[data-live-search]').trigger('input');
     }
 
     function initValidation() {

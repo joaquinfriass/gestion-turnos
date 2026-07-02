@@ -21,7 +21,7 @@ class Usuario
 
     public function listar(string $busqueda = '', ?string $rol = null): array
     {
-        $sql = 'SELECT id, nombre, email, rol, created_at FROM usuarios WHERE 1 = 1';
+        $sql = 'SELECT id, nombre, email, rol, especialidad, matricula, created_at FROM usuarios WHERE 1 = 1';
         $params = [];
 
         if ($rol !== null && $rol !== '') {
@@ -30,7 +30,7 @@ class Usuario
         }
 
         if ($busqueda !== '') {
-            $sql .= ' AND (nombre LIKE :busqueda OR email LIKE :busqueda OR rol LIKE :busqueda)';
+            $sql .= ' AND (nombre LIKE :busqueda OR email LIKE :busqueda OR rol LIKE :busqueda OR especialidad LIKE :busqueda OR matricula LIKE :busqueda)';
             $params[':busqueda'] = '%' . $busqueda . '%';
         }
 
@@ -43,7 +43,7 @@ class Usuario
 
     public function obtenerPorId(int $id): ?array
     {
-        $stmt = $this->db->prepare('SELECT id, nombre, email, rol, created_at FROM usuarios WHERE id = :id LIMIT 1');
+        $stmt = $this->db->prepare('SELECT id, nombre, email, rol, especialidad, matricula, created_at FROM usuarios WHERE id = :id LIMIT 1');
         $stmt->execute([':id' => $id]);
         $usuario = $stmt->fetch();
 
@@ -53,8 +53,8 @@ class Usuario
     public function crear(array $datos): bool
     {
         $stmt = $this->db->prepare('
-            INSERT INTO usuarios (nombre, email, password, rol)
-            VALUES (:nombre, :email, :password, :rol)
+            INSERT INTO usuarios (nombre, email, password, rol, especialidad, matricula)
+            VALUES (:nombre, :email, :password, :rol, :especialidad, :matricula)
         ');
 
         return $stmt->execute([
@@ -62,6 +62,8 @@ class Usuario
             ':email' => $datos['email'],
             ':password' => password_hash($datos['password'], PASSWORD_DEFAULT),
             ':rol' => $datos['rol'],
+            ':especialidad' => $datos['especialidad'] ?: null,
+            ':matricula' => $datos['matricula'] ?: null,
         ]);
     }
 
@@ -72,6 +74,8 @@ class Usuario
             ':nombre' => $datos['nombre'],
             ':email' => $datos['email'],
             ':rol' => $datos['rol'],
+            ':especialidad' => $datos['especialidad'] ?: null,
+            ':matricula' => $datos['matricula'] ?: null,
         ];
 
         $passwordSql = '';
@@ -82,7 +86,7 @@ class Usuario
 
         $stmt = $this->db->prepare("
             UPDATE usuarios
-            SET nombre = :nombre, email = :email, rol = :rol {$passwordSql}
+            SET nombre = :nombre, email = :email, rol = :rol, especialidad = :especialidad, matricula = :matricula {$passwordSql}
             WHERE id = :id
         ");
 

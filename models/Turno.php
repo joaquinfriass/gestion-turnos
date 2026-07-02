@@ -173,7 +173,7 @@ class Turno
     public function listarMedicos(): array
     {
         $stmt = $this->db->query("
-            SELECT id, nombre, email
+            SELECT id, nombre, email, especialidad, matricula
             FROM usuarios
             WHERE rol = 'medico'
             ORDER BY nombre

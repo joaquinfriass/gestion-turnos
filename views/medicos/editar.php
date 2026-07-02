@@ -16,10 +16,13 @@
         <?php if (!empty($errores)): ?><div class="alert alert-danger"><?php foreach ($errores as $error): ?><div><?php echo htmlspecialchars($error); ?></div><?php endforeach; ?></div><?php endif; ?>
         <section class="form-panel">
             <form action="index.php?action=medicos_editar&id=<?php echo (int) $id; ?>" method="POST" class="row g-3 js-validate">
+                <?php echo AuthController::csrfInput(); ?>
                 <input type="hidden" name="id" value="<?php echo (int) $id; ?>">
                 <div class="col-12"><label class="form-label" for="nombre">Nombre</label><input class="form-control" id="nombre" name="nombre" value="<?php echo htmlspecialchars($medico['nombre']); ?>" maxlength="100" required></div>
                 <div class="col-12 col-md-6"><label class="form-label" for="email">Email</label><input class="form-control" type="email" id="email" name="email" value="<?php echo htmlspecialchars($medico['email']); ?>" maxlength="150" required></div>
                 <div class="col-12 col-md-6"><label class="form-label" for="password">Nueva contraseña</label><input class="form-control" type="password" id="password" name="password" placeholder="Dejar vacio para mantener"></div>
+                <div class="col-12 col-md-6"><label class="form-label" for="especialidad">Especialidad</label><input class="form-control" id="especialidad" name="especialidad" value="<?php echo htmlspecialchars($medico['especialidad'] ?? ''); ?>" maxlength="100" required></div>
+                <div class="col-12 col-md-6"><label class="form-label" for="matricula">Matricula</label><input class="form-control" id="matricula" name="matricula" value="<?php echo htmlspecialchars($medico['matricula'] ?? ''); ?>" maxlength="50" required></div>
                 <div class="form-actions"><a class="btn btn-outline-secondary" href="index.php?action=medicos">Cancelar</a><button class="btn btn-primary" type="submit"><i class="bi bi-check-lg"></i><span>Actualizar medico</span></button></div>
             </form>
         </section>

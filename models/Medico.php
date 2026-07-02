@@ -16,6 +16,18 @@ class Medico
         return $this->usuarioModel->listar($busqueda, 'medico');
     }
 
+    public function listarFiltrado(string $busqueda = '', string $especialidad = '', string $matricula = ''): array
+    {
+        $medicos = $this->usuarioModel->listar($busqueda, 'medico');
+
+        return array_values(array_filter($medicos, function (array $medico) use ($especialidad, $matricula): bool {
+            $matchEspecialidad = $especialidad === '' || stripos($medico['especialidad'] ?? '', $especialidad) !== false;
+            $matchMatricula = $matricula === '' || stripos($medico['matricula'] ?? '', $matricula) !== false;
+
+            return $matchEspecialidad && $matchMatricula;
+        }));
+    }
+
     public function obtenerPorId(int $id): ?array
     {
         $usuario = $this->usuarioModel->obtenerPorId($id);

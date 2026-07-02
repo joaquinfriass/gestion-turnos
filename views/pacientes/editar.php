@@ -25,6 +25,7 @@
 
         <section class="form-panel">
             <form action="index.php?action=pacientes_editar&id=<?php echo (int) $id; ?>" method="POST" class="row g-3 js-validate">
+                <?php echo AuthController::csrfInput(); ?>
                 <input type="hidden" name="id" value="<?php echo (int) $id; ?>">
                 <div class="col-12 col-md-6">
                     <label class="form-label" for="dni">DNI</label>

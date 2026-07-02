@@ -19,6 +19,8 @@
             </div>
             <?php if (empty($soloLectura)): ?>
                 <a class="btn btn-primary" href="index.php?action=pacientes_crear"><i class="bi bi-plus-lg"></i><span>Nuevo paciente</span></a>
+            <?php elseif (($listAction ?? '') === 'recepcion_pacientes'): ?>
+                <a class="btn btn-primary" href="index.php?action=recepcion_pacientes_crear"><i class="bi bi-plus-lg"></i><span>Nuevo paciente</span></a>
             <?php endif; ?>
         </header>
 
@@ -68,6 +70,7 @@
                                         <div class="actions">
                                             <a class="btn btn-sm btn-outline-secondary" href="index.php?action=pacientes_editar&id=<?php echo (int) $paciente['id']; ?>" title="Editar paciente"><i class="bi bi-pencil"></i></a>
                                             <form action="index.php?action=pacientes_eliminar" method="POST" class="js-delete-form">
+                                                <?php echo AuthController::csrfInput(); ?>
                                                 <input type="hidden" name="id" value="<?php echo (int) $paciente['id']; ?>">
                                                 <button class="btn btn-sm btn-outline-danger" type="submit" title="Eliminar paciente"><i class="bi bi-trash"></i></button>
                                             </form>

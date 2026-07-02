@@ -26,6 +26,7 @@
                         <?php endif; ?>
 
                         <form action="index.php?action=login" method="POST">
+                            <?php echo AuthController::csrfInput(); ?>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Correo electronico</label>
                                 <input
